@@ -80,5 +80,6 @@ trigger:
   #     exclude:
 
 
-variables:
+variables:    #2 types group(denoted by group) single 
+  - testVar: 'tuesday'
 
