@@ -12,7 +12,7 @@ stages:            #build/release defintion, code analysis
         pool:
           vmImage: 'ubuntu-16.04' #vm to run installer
         steps:
-          - steps:
+          - step:
             displayName:
 #
             - script: | #keep config as is vs > forget format - wordWrap everything vs |> 
@@ -31,7 +31,7 @@ stages:            #build/release defintion, code analysis
       pool:   #toolbox -- pool of tools
         vmImage: 'ubuntu-16.04' #what type of server do we want?
       steps:    #2 kinds - tasks & scripts
-        - scripts: |
+        - script: |
             echo 'test passed ...'
   - stage:  'pack'
     condition: succeded('build')
@@ -45,7 +45,7 @@ stages:            #build/release defintion, code analysis
       pool:   #toolbox -- pool of tools
         vmImage: 'ubuntu-16.04' #what type of server do we want?
       steps:    #2 kinds - tasks & scripts
-        - scripts: |
+        - script: |
             echo 'test passed ...'
   - stage:  'deployed'
     condition: succeded('deployed')
@@ -60,7 +60,7 @@ stages:            #build/release defintion, code analysis
       pool:   #toolbox -- pool of tools
         vmImage: 'ubuntu-16.04' #what type of server do we want?
       steps:    #2 kinds - tasks & scripts
-        - scripts: |
+        - script: |
             echo 'deployed passed ...'
 
 trigger:
