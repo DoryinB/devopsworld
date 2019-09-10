@@ -23,6 +23,7 @@ stages:            #build/release defintion, code analysis
               
   - stage:  'test'
     condition: succeded('build')
+    displayName: 'test-mvc'
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
       - bulid
       - 
@@ -51,6 +52,7 @@ stages:            #build/release defintion, code analysis
             echo 'test passed ...'
   - stage:  'deployed'
     condition: succeded('deployed')
+    displayName: 'deploy-mvc'
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
       # - bulid
       # - 
