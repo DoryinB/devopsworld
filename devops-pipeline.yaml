@@ -1,13 +1,14 @@
 # devopsdemo - pipeline
 
-name: $(date:yyyyMMdd)$(rev:.rr)  #ex: 20190910.00
+name: $(date:yyyyMMdd)$(rev:.rr)  #ex: 20190910.00 revision=.rr
 
-stage:
+stage:            #build/release defintion, code analysis
   - stage: 'build'  # (without '') i want this to eventually be evaluated
+    condition:  succeded()      #when to run stage -- last ?build? must have succeded
     displayName: 'build-mvc'  # literal value
     jobs:
       - job:
-        displayName:
+        displayName: 'build-process'
         pool:
           vmImage: 'ubuntu-16.04' #vm to run installer
         steps:
@@ -19,3 +20,65 @@ stage:
               # - task: DotnetInstaller@1
               #   input: '2.2.401'  #Version
               # - task:
+              
+  - stage:  'test'
+    condition: succeded('build')
+    dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
+      - bulid
+      - 
+    jobs:    #
+      -job: 
+        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+        displayName: 'test-process'
+        pool:   #toolbox -- pool of tools
+          vmImage: 'ubuntu-16.04' #what type of server do we want?
+        steps:    #2 kinds - tasks & scripts
+          - scripts: |
+              echo 'test passed ...'
+  - stage:  'pack'
+    condition: succeded('build')
+    dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
+      - bulid
+      - 
+    jobs:    #
+      -job: 
+        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+        displayName: 'test-process'
+        pool:   #toolbox -- pool of tools
+          vmImage: 'ubuntu-16.04' #what type of server do we want?
+        steps:    #2 kinds - tasks & scripts
+          - scripts: |
+              echo 'test passed ...'
+  - stage:  'deployed'
+    condition: succeded('deployed')
+    dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
+      # - bulid
+      # - 
+    jobs:    #
+      -job: 
+        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+        displayName: 'deployed-process'
+        pool:   #toolbox -- pool of tools
+          vmImage: 'ubuntu-16.04' #what type of server do we want?
+        steps:    #2 kinds - tasks & scripts
+          - scripts: |
+              echo 'deployed passed ...'
+
+triggers:
+  # - master  #include only master
+  - branches:     # filter on the branches we want/do not want
+      include:
+        - master
+      # exclude:
+      #   -'*'
+
+  # - pr:           # pull request
+  #     include:
+  #     exclude:  
+  # - tags:         # denotes the type
+  #     include:
+  #     exclude:
+
+
+variables:
+
