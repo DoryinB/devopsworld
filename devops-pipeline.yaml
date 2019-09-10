@@ -28,13 +28,13 @@ stages:            #build/release defintion, code analysis
       - 
     jobs:    #
       -job: 
-        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
-        displayName: 'test-process'
-        pool:   #toolbox -- pool of tools
-          vmImage: 'ubuntu-16.04' #what type of server do we want?
-        steps:    #2 kinds - tasks & scripts
-          - scripts: |
-              echo 'test passed ...'
+      condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+      displayName: 'test-process'
+      pool:   #toolbox -- pool of tools
+        vmImage: 'ubuntu-16.04' #what type of server do we want?
+      steps:    #2 kinds - tasks & scripts
+        - scripts: |
+            echo 'test passed ...'
   - stage:  'pack'
     condition: succeded('build')
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
@@ -42,13 +42,13 @@ stages:            #build/release defintion, code analysis
       - 
     jobs:    #
       -job: 
-        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
-        displayName: 'test-process'
-        pool:   #toolbox -- pool of tools
-          vmImage: 'ubuntu-16.04' #what type of server do we want?
-        steps:    #2 kinds - tasks & scripts
-          - scripts: |
-              echo 'test passed ...'
+      condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+      displayName: 'test-process'
+      pool:   #toolbox -- pool of tools
+        vmImage: 'ubuntu-16.04' #what type of server do we want?
+      steps:    #2 kinds - tasks & scripts
+        - scripts: |
+            echo 'test passed ...'
   - stage:  'deployed'
     condition: succeded('deployed')
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
@@ -56,13 +56,13 @@ stages:            #build/release defintion, code analysis
       # - 
     jobs:    #
       -job: 
-        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
-        displayName: 'deployed-process'
-        pool:   #toolbox -- pool of tools
-          vmImage: 'ubuntu-16.04' #what type of server do we want?
-        steps:    #2 kinds - tasks & scripts
-          - scripts: |
-              echo 'deployed passed ...'
+      condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+      displayName: 'deployed-process'
+      pool:   #toolbox -- pool of tools
+        vmImage: 'ubuntu-16.04' #what type of server do we want?
+      steps:    #2 kinds - tasks & scripts
+        - scripts: |
+            echo 'deployed passed ...'
 
 trigger:
   # - master  #include only master
