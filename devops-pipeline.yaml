@@ -6,24 +6,24 @@ stages:            #build/release defintion, code analysis
   - stage: 'build'  # (without '') i want this to eventually be evaluated
     condition:  succeded()      #when to run stage -- last ?build? must have succeded
     displayName: 'build-mvc'  # literal value
-    pool:
-      vmImage: 'ubuntu-16.04' #vm to run installer
-    steps:
-      - steps:
-        displayName:
+    jobs:
+      - job:
+        displayName: 'build-process'
+        pool:
+          vmImage: 'ubuntu-16.04' #vm to run installer
+        steps:
+          - steps:
+            displayName:
 #
-        - script: | #keep config as is vs > forget format - wordWrap everything vs |> 
-            echo 'Hello Pipeline'
-          # - task: DotnetInstaller@1
-          #   input: '2.2.401'  #Version
-          # - task:
-          
+            - script: | #keep config as is vs > forget format - wordWrap everything vs |> 
+                echo 'Hello Pipeline'
+              # - task: DotnetInstaller@1
+              #   input: '2.2.401'  #Version
+              # - task:
+              
   - stage:  'test'
     condition: succeded('build')
     displayName: 'test-mvc'
-    dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
-      - bulid
-      - 
     jobs:    #
       -jobs: 
       condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
