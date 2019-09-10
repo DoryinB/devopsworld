@@ -2,7 +2,7 @@
 
 name: $(date:yyyyMMdd)$(rev:.rr)  #ex: 20190910.00 revision=.rr
 
-stage:            #build/release defintion, code analysis
+stages:            #build/release defintion, code analysis
   - stage: 'build'  # (without '') i want this to eventually be evaluated
     condition:  succeded()      #when to run stage -- last ?build? must have succeded
     displayName: 'build-mvc'  # literal value
@@ -64,11 +64,11 @@ stage:            #build/release defintion, code analysis
           - scripts: |
               echo 'deployed passed ...'
 
-triggers:
+trigger:
   # - master  #include only master
-  - branches:     # filter on the branches we want/do not want
-      include:
-        - master
+  branches:     # filter on the branches we want/do not want
+    include:
+      - master
       # exclude:
       #   -'*'
 
