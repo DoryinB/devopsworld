@@ -12,7 +12,7 @@ stages:            #build/release defintion, code analysis
         pool:
           vmImage: 'ubuntu-16.04' #vm to run installer
         steps:
-          - step:
+          - steps:
             displayName:
 #
             - script: | #keep config as is vs > forget format - wordWrap everything vs |> 
@@ -28,7 +28,7 @@ stages:            #build/release defintion, code analysis
       - bulid
       - 
     jobs:    #
-      -job: 
+      -jobs: 
       condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
       displayName: 'test-process'
       pool:   #toolbox -- pool of tools
@@ -42,7 +42,7 @@ stages:            #build/release defintion, code analysis
       - bulid
       - 
     jobs:    #
-      -job: 
+      -jobs: 
       condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
       displayName: 'test-process'
       pool:   #toolbox -- pool of tools
@@ -57,7 +57,7 @@ stages:            #build/release defintion, code analysis
       # - bulid
       # - 
     jobs:    #
-      -job: 
+      -jobs: 
       condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
       displayName: 'deployed-process'
       pool:   #toolbox -- pool of tools
