@@ -45,6 +45,17 @@ stages:            #build/release defintion, code analysis
               dotnet test -p:CollectCoverage=true
               dotnet sonarscanner end /d:sonar.login="0b55bd562bf3b09a429cffccd6e8603b3a958084"
               echo 'test passed ...'
+          - task: PublishTestResults@2
+            displayName: 'publish result::unit-test'
+            inputs:
+              testRunner: VSTest
+              testResultsFiles: '**/*.trx'
+          - task: PublishCodeCoverageResults@1
+            displayName: 'publish result::code-coverage'
+            inputs:
+              codeCoverageTool: cobertura
+              summaryFileLocation: '**/coverage.cobertura.xml'
+
   - stage:  'pack'
     condition: succeded()
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
