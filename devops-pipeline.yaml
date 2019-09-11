@@ -8,45 +8,55 @@ stages:            #build/release defintion, code analysis
     displayName: 'build-mvc'  # literal value
     jobs:
       - job:
+        condition: succeeded()
         displayName: 'build-process'
         pool:
           vmImage: 'ubuntu-16.04' #vm to run installer
         steps:
-          - step:
-            displayName:
-#
-            - script: | #keep config as is vs > forget format - wordWrap everything vs |> 
-                echo 'Hello Pipeline'
-              # - task: DotnetInstaller@1
-              #   input: '2.2.401'  #Version
-              # - task:
+          - task: UseDotNet@2
+            displayName: 'dotnet installer'
+            inputs:
+              version: '2.2.401'
+          - script: | #keep config as is vs > forget format - wordWrap everything vs |> 
+              echo 'Hello Pipeline'
+              dotnet build
+            # - task: DotnetInstaller@1
+            #   input: '2.2.401'  #Version
+            # - task:
               
   - stage:  'test'
-    condition: succeded('build')
+    condition: succeded() #'build')
     displayName: 'test-mvc'
-    jobs:    #
-      -jobs: 
-      condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
-      displayName: 'test-process'
-      pool:   #toolbox -- pool of tools
-        vmImage: 'ubuntu-16.04' #what type of server do we want?
-      steps:    #2 kinds - tasks & scripts
-        - script: |
-            echo 'test passed ...'
+    jobs:    
+      - job: 
+        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+        displayName: 'test-process'
+        pool:   #toolbox -- pool of tools
+          vmImage: 'ubuntu-16.04' #what type of server do we want?
+        steps:    #2 kinds - tasks & scripts
+          - script: |
+              dotnet tool install --global dotnet-sonarscanner
+              dotnet sonarscanner begin /k:"devopsdemo2019" /o:"fredbelotte-github" /d:sonar.login="5525c02dac30659cb0710672f763f1be743c7afe" /d:sonar.host.url="https://sonarcloud.io/"
+              dotnet build
+              dotnet test -p:CollectCoverage=true
+              dotnet sonarscanner end /d:sonar.login="5525c02dac30659cb0710672f763f1be743c7afe"
+              echo 'test passed ...'
   - stage:  'pack'
-    condition: succeded('build')
+    condition: succeded()
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
       - bulid
-      - 
+      #- 
+    displayName: 'pack-mvc'
     jobs:    #
-      -job: 
-      condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
-      displayName: 'test-process'
-      pool:   #toolbox -- pool of tools
-        vmImage: 'ubuntu-16.04' #what type of server do we want?
-      steps:    #2 kinds - tasks & scripts
-        - script: |
-            echo 'test passed ...'
+      - job: 
+        condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
+        displayName: 'pack-process'
+        pool:   #toolbox -- pool of tools
+          vmImage: 'ubuntu-16.04' #what type of server do we want?
+        steps:    #2 kinds - tasks & scripts
+          - script: |
+              echo 'test passed ...'
+              dotnet publish
   - stage:  'deployed'
     condition: succeded('deployed')
     displayName: 'deploy-mvc'
@@ -54,14 +64,14 @@ stages:            #build/release defintion, code analysis
       # - bulid
       # - 
     jobs:    #
-      -jobs: 
+      -job: 
       condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
       displayName: 'deployed-process'
       pool:   #toolbox -- pool of tools
         vmImage: 'ubuntu-16.04' #what type of server do we want?
       steps:    #2 kinds - tasks & scripts
         - script: |
-            echo 'deployed passed ...'
+            echo 'working on it ...'
 
 trigger:
   # - master  #include only master
@@ -80,5 +90,5 @@ trigger:
 
 
 variables:    #2 types group(denoted by group) single 
-  testVar: 'tuesday'
-
+  variables:
+  #sonar: ''
