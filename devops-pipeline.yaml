@@ -34,17 +34,21 @@ stages:            #build/release defintion, code analysis
         pool:   #toolbox -- pool of tools
           vmImage: 'ubuntu-16.04' #what type of server do we want?
         steps:    #2 kinds - tasks & scripts
+          - task: UseDotNet@2
+            displayName: 'dotnet installer'
+            inputs:
+              version: '2.2.401'
           - script: |
               dotnet tool install --global dotnet-sonarscanner
-              dotnet sonarscanner begin /k:"devopsdemo2019" /o:"fredbelotte-github" /d:sonar.login="5525c02dac30659cb0710672f763f1be743c7afe" /d:sonar.host.url="https://sonarcloud.io/"
+              dotnet sonarscanner begin /k:"DoryinB_devopsworld" /o:"doryinb" /d:sonar.login="0b55bd562bf3b09a429cffccd6e8603b3a958084" /d:sonar.host.url="https://sonarcloud.io/"
               dotnet build
               dotnet test -p:CollectCoverage=true
-              dotnet sonarscanner end /d:sonar.login="5525c02dac30659cb0710672f763f1be743c7afe"
+              dotnet sonarscanner end /d:sonar.login="0b55bd562bf3b09a429cffccd6e8603b3a958084"
               echo 'test passed ...'
   - stage:  'pack'
     condition: succeded()
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
-      - bulid
+      - test
       #- 
     displayName: 'pack-mvc'
     jobs:    #
@@ -58,11 +62,11 @@ stages:            #build/release defintion, code analysis
               echo 'test passed ...'
               dotnet publish
   - stage:  'deployed'
-    condition: succeded('deployed')
-    displayName: 'deploy-mvc'
+    condition: succeded()
     dependsOn:     #only run this stage if other stages have run -- test not neccissary run after build
-      # - bulid
+      - test
       # - 
+    displayName: 'deploy-mvc'
     jobs:    #
       -job: 
       condition: succeded() #and(succeded(), eq(['BranchName'], 'fred'))    #only complete a job if given condtion met
